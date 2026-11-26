@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #efefef;
   --foreground: #171717;
 }
 
@@ -12,15 +12,33 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}*/
+
+html {
+  scrollbar-gutter: stable;
+}
+
+html:has(dialog:modal) {
+  overflow: hidden;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  @apply p-4
+}
+
+input {
+    border-width: 1px;
+    @apply bg-white border-gray-700 rounded-sm p-1
+}
+
+.card {
+    @apply bg-white p-4 rounded-lg shadow
 }
