@@ -1,27 +1,42 @@
 import Modal, { TModalProps } from "@/components/Modal";
+import { useProductQuery, useProductUpdateMutation } from "@/services/api";
+import { TProduct } from "@/types/api";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { TUpdateSchema, updateSchema } from "../_schemas/schema";
+import FormProduct from "./FormProduct";
 
-export default function ModalEdit({ ...modalProps }: TModalProps) {
+type TFormUpdate = {
+  product: TProduct
+  onSubmit: (product: {id: number} & Partial<TProduct>) => void
+  isLoading: boolean
+}
+
+function FormUpdate({ product: defaultValues, isLoading, onSubmit }: TFormUpdate) {
+  const form = useForm<TUpdateSchema>({
+    resolver: yupResolver(updateSchema),
+    defaultValues
+  })
+
+  return (
+    <FormProduct form={form} onSubmit={onSubmit} isLoading={isLoading}  />
+  )
+}
+
+export default function ModalEdit({ id, ...modalProps }: TModalProps & { id: number | null }) {
+  const [updateProduct, { isLoading }] = useProductUpdateMutation()
+  const { currentData: product } = useProductQuery(Number(id), {
+    skip: !id
+  })
+
+  const onSubmit = async (values: Parameters<TFormUpdate['onSubmit']>[0]) => {
+    updateProduct(values)
+    modalProps.onClose?.()
+  }
+
   return (
     <Modal {...modalProps}>
-      <div className="space-y-1 flex flex-col">
-        <label>
-          Title
-        </label>
-        <input />
-        <label>
-          Desc
-        </label>
-        <input />
-        <label>
-          Category
-        </label>
-        <input />
-        <label>
-          Stock
-        </label>
-        <input />
-        <button>Edit</button>
-      </div>
+      {product && <FormUpdate product={product} onSubmit={onSubmit} isLoading={isLoading} />}
     </Modal>
   )
 }

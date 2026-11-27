@@ -7,7 +7,9 @@ import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import SelectCategory from "./SelectCategory";
 
-export default function Filter() {
+type TProps = { openModalAddAction: () => void }
+
+export default function Filter({ openModalAddAction }: TProps) {
   const dispatch = useDispatch()
   const search = useAppSelector(s => s.filter.search)
   const category = useAppSelector(s => s.filter.category)
@@ -24,7 +26,10 @@ export default function Filter() {
   return (
     <div className="card flex gap-2">
       <input placeholder="Search..." onChange={e => onSearch(e.target.value)} defaultValue={search}  />
-      <SelectCategory value={category} onChange={setCategory}  />
+      <SelectCategory value={category} onChange={setCategory} />
+      <button onClick={openModalAddAction}>
+        add
+      </button>
     </div>
   )
 }

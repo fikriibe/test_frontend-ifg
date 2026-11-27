@@ -1,3 +1,4 @@
+import { RootState } from "@/lib/store";
 import { TCategory, TProduct, TSortKeyOption } from "@/types/api";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -116,6 +117,26 @@ export const api = createApi({
       }),
       productUpdate: build.mutation<TProduct, { id: number } & Partial<TProduct>>({
         query: ({ id, ...body }) => ({ url: `/${id}`, method: 'PUT', body }),
+        async onQueryStarted({ id, ...body }, { dispatch, getState, queryFulfilled }) {
+            const cached = api.util.selectInvalidatedBy(getState() as RootState, [{ type: 'Product', id }])
+            console.log('test')
+            const patches = cached.map(({ endpointName, originalArgs }) =>
+              endpointName === 'products'
+                ? dispatch(api.util.updateQueryData('products', originalArgs, (draft) => {
+                    const item = draft.products.find((p) => p.id === id)
+                    if (item) Object.assign(item, patch)
+                  }))
+                : dispatch(api.util.updateQueryData('product', originalArgs, (draft) => {
+                    Object.assign(draft, patch)
+                  }))
+            )
+
+            try {
+              await queryFulfilled
+            } catch {
+              patches.forEach((p) => p.undo())
+            }
+          },
         invalidatesTags: (_res, _err, { id }) => [{ type: 'Product', id }]
       }),
       productDelete: build.mutation<void, number>({
