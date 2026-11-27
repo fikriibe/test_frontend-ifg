@@ -1,6 +1,11 @@
 import { useCategoriesQuery } from "@/services/api"
 
-export default function SelectCategory() {
+type TProps = {
+  value: string
+  onChange: (val: string) => void
+}
+
+export default function SelectCategory({ value, onChange }: TProps) {
   const { data, isLoading, isError, error } = useCategoriesQuery()
 
   if (isLoading) {
@@ -12,7 +17,7 @@ export default function SelectCategory() {
 
   return (
     <div className="bg-white border pr-1.5 border-gray-700 rounded-sm h-8.5 flex items-stretch">
-      <select className="outline-0" name="" id="">
+      <select className="outline-0" name="" id="" value={value} onChange={(e) => onChange(e.target.value)}>
         {data?.map(({ name, slug  }) => (
           <option key={slug} value={slug}>{name}</option>
         ))}

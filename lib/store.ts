@@ -1,8 +1,12 @@
 import { api } from "@/services/api";
 import { configureStore } from "@reduxjs/toolkit";
+import filterReducer from "./filterReducer"
 
 export const makeStore = () => configureStore({
-  reducer: { [api.reducerPath]: api.reducer },
+  reducer: {
+    [api.reducerPath]: api.reducer,
+    filter: filterReducer
+  },
   middleware: (getDefault) => getDefault().concat(api.middleware)
 })
 

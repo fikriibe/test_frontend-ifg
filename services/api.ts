@@ -2,8 +2,9 @@ import { TCategory, TProduct } from "@/types/api";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 type TProductsReq = Partial<{
-  limit: number
-  skip: number
+  sort: string
+  page: number
+  category: string
   search: string
 }>
 

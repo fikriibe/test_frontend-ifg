@@ -5,11 +5,14 @@ import Filter from "./_components/Filter";
 import ModalEdit from "./_components/ModalEdit";
 import ModalDeleteConfirm from "./_components/ModalDeleteConfirm";
 import { useState } from "react";
+import { useSyncFilter } from "./_hooks/useSyncFilter";
 
 export default function Products() {
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const { data, isLoading, isError, error } = useProductsQuery({})
+  useSyncFilter()
+
   return (
     <>
       <Filter />
