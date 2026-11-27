@@ -50,7 +50,7 @@ export const api = createApi({
             let url = `/?skip=${skip}&limit=${limit}`
             if (sort) {
               const [sortBy,order] = sort.split('_')
-              url+= `&order=desc&sortBy=${sortBy}&order=${order}`
+              url+= `&sortBy=${sortBy}&order=${order}`
             }
             const res = await baseQuery(url)
             if (res.error) {
@@ -89,12 +89,6 @@ export const api = createApi({
               totalPages
             }
           }
-
-
-
-
-
-          return {} as TProductsRes
         },
         providesTags: (res) => res ?
           [
@@ -113,21 +107,38 @@ export const api = createApi({
       }),
       productAdd: build.mutation<TProduct, Partial<TProduct>>({
         query: (body) => ({ url: '/add', method: 'POST', body }),
-        invalidatesTags: [{ type: 'Product', id: 'LIST' }]
+        async onQueryStarted(body, { dispatch, getState, queryFulfilled }) {
+          const lists = api.util
+            .selectInvalidatedBy(getState() as RootState, [{ type: 'Product', id: 'LIST' }])
+            .filter(({ endpointName }) => endpointName === 'products')
+          const tempId = Math.max(Math.round(Math.random() * 500), 300)
+          const patches = lists.map(({ originalArgs }) =>
+            dispatch(api.util.updateQueryData('products', originalArgs, (draft) => {
+              draft.products.unshift({ ...body, id: tempId } as TProduct)
+              if (draft.products.length > draft.limit) draft.products.pop()
+              draft.total += 1
+            }))
+          )
+          try {
+            await queryFulfilled
+          } catch {
+            patches.forEach((p) => p.undo())
+          }
+        }
+        // invalidatesTags: [{ type: 'Product', id: 'LIST' }]
       }),
       productUpdate: build.mutation<TProduct, { id: number } & Partial<TProduct>>({
         query: ({ id, ...body }) => ({ url: `/${id}`, method: 'PUT', body }),
         async onQueryStarted({ id, ...body }, { dispatch, getState, queryFulfilled }) {
             const cached = api.util.selectInvalidatedBy(getState() as RootState, [{ type: 'Product', id }])
-            console.log('test')
             const patches = cached.map(({ endpointName, originalArgs }) =>
               endpointName === 'products'
                 ? dispatch(api.util.updateQueryData('products', originalArgs, (draft) => {
                     const item = draft.products.find((p) => p.id === id)
-                    if (item) Object.assign(item, patch)
+                    if (item) Object.assign(item, body)
                   }))
                 : dispatch(api.util.updateQueryData('product', originalArgs, (draft) => {
-                    Object.assign(draft, patch)
+                    Object.assign(draft, body)
                   }))
             )
 
@@ -137,11 +148,27 @@ export const api = createApi({
               patches.forEach((p) => p.undo())
             }
           },
-        invalidatesTags: (_res, _err, { id }) => [{ type: 'Product', id }]
+        // invalidatesTags: (_res, _err, { id }) => [{ type: 'Product', id }]
       }),
       productDelete: build.mutation<void, number>({
         query: (id) => ({ url: `/${id}`, method: 'DELETE' }),
-        invalidatesTags: [{ type: 'Product', id: 'LIST' }]
+        async onQueryStarted(id, { dispatch, getState, queryFulfilled }) {
+          const lists = api.util
+            .selectInvalidatedBy(getState() as RootState, [{ type: 'Product', id: 'LIST' }])
+            .filter(({ endpointName }) => endpointName === 'products')
+          const patches = lists.map(({ originalArgs }) =>
+            dispatch(api.util.updateQueryData('products', originalArgs, (draft) => {
+              draft.products = draft.products.filter((item) => item.id !== id)
+              draft.total -= 1
+            }))
+          )
+          try {
+            await queryFulfilled
+          } catch {
+            patches.forEach((p) => p.undo())
+          }
+        }
+        // invalidatesTags: [{ type: 'Product', id: 'LIST' }]
       })
     }
   }

@@ -101,7 +101,7 @@ export default function Products() {
       )}
       <ModalAdd open={ openAdd} onClose={( )=> setOpenAdd(false)} />
       <ModalEdit id={editId} open={!!editId} onClose={ () => setEditId(null)} />
-      <ModalDeleteConfirm open={!!deleteId} onClose={() => setDeleteId(null)} />
+      <ModalDeleteConfirm id={deleteId} open={!!deleteId} onClose={() => setDeleteId(null)} />
     </>
   )
 }

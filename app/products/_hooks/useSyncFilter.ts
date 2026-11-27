@@ -48,5 +48,5 @@ export function useSyncFilter() {
       router.replace(newParams ? `${pathname}?${newParams}` : pathname, { scroll: false })
     }
 
-  }, [filter.category, filter.page, filter.search, filter.sort])
+  }, [filter.category, filter.page, filter.search, filter.sort, pathname, router])
 }
