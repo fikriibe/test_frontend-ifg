@@ -98,8 +98,8 @@ export default function Table({ setEditId,setDeleteId }: TProps) {
 
   return (
     <>
-      <div className="w-full overflow-auto">
-        <table className="mt-8 [&_tr]:h-8.5 [&_td]:px-2">
+      <div className="w-full overflow-auto mt-8">
+        <table className="w-full [&_tr]:h-8.5 [&_td]:px-2">
         	<thead className="[&_td]:bg-gray-300 [&_td]:font-semibold">
         		<tr>
               <td>ID</td>
