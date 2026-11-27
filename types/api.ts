@@ -43,3 +43,5 @@ export type TCategory = {
     name: string
     url: string
   }
+
+export  type TSortKeyOption = 'title' | 'price' | 'category' | 'stock'

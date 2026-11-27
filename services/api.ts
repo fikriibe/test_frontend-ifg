@@ -1,4 +1,4 @@
-import { TCategory, TProduct } from "@/types/api";
+import { TCategory, TProduct, TSortKeyOption } from "@/types/api";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 type TProductsReq = Partial<{
@@ -13,8 +13,25 @@ type TProductsRes = {
   total: number
   skip: number
   limit: number
+  totalPages?: number
 }
 
+
+
+function sortProducts(items: TProduct[], sort?: string): TProduct[] {
+  if (!sort) return items
+  const sortKeys = sort?.split("_")
+  return [...items].sort((a, b) => {
+    const by = sortKeys[0] as keyof TProduct
+    const order = sortKeys[1]
+    if (['title', 'category'].includes(by)) {
+      if (order == 'desc') return (b[by] as string).localeCompare(a[by] as string)
+      return (a[by] as string).localeCompare(b[by] as string)
+    }
+    if(order === 'desc') return +b[by] - +a[by]
+    return +a[by] - +b[by]
+  })
+}
 
 
 export const api = createApi({
@@ -24,10 +41,60 @@ export const api = createApi({
   endpoints(build) {
     return {
       products: build.query<TProductsRes, TProductsReq>({
-        query: (params) => ({
-          url: '/',
-          params
-        }),
+        async queryFn(params, _api, _extraOptions, baseQuery) {
+          const { category, page = 1, search, sort } = params
+          const limit = 10
+          if (!category && !search) {
+            const skip = (page - 1) * limit
+            let url = `/?skip=${skip}&limit=${limit}`
+            if (sort) {
+              const [sortBy,order] = sort.split('_')
+              url+= `&order=desc&sortBy=${sortBy}&order=${order}`
+            }
+            const res = await baseQuery(url)
+            if (res.error) {
+              return { error: res.error }
+            }
+            const data = res.data as Omit<TProductsRes, 'totalPages'>
+            return { data: {...data, page, totalPages: Math.ceil(data.total / limit)} }
+          }
+
+          const [sFetch, cFetch] = await Promise.all([
+            search ? baseQuery(`/search?q=${search}`) : null,
+            category ? baseQuery(`/category/${category}`) : null
+          ])
+
+          if (sFetch?.error) return { error: sFetch.error }
+          if (cFetch?.error) return { error: cFetch.error }
+
+          const sRes = (sFetch?.data as TProductsRes | undefined)?.products
+          const cRes = (cFetch?.data as TProductsRes | undefined)?.products
+
+          let res = sRes ?? cRes
+          if (sRes && cRes) {
+            const cIds = cRes.map(({ id }) => id)
+            res = sRes.filter((item) => cIds.includes(item.id))
+          }
+          const resSorted = sortProducts(res || [], sort as TSortKeyOption)
+          const total = resSorted.length
+          const totalPages = Math.max(1, Math.ceil(total / limit))
+          const skip = (page - 1) * limit
+          return {
+            data: {
+              products: resSorted.slice(skip, skip + limit),
+              total,
+              skip,
+              limit,
+              totalPages
+            }
+          }
+
+
+
+
+
+          return {} as TProductsRes
+        },
         providesTags: (res) => res ?
           [
             ...res.products.map(({ id }) => ({ type: 'Product' as const, id })),
