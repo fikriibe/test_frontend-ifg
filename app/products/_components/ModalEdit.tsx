@@ -36,6 +36,9 @@ export default function ModalEdit({ id, ...modalProps }: TModalProps & { id: num
 
   return (
     <Modal {...modalProps}>
+      <h3 className="text-lg font-semibold mb-4 text-center">
+        Update Product
+      </h3>
       {product && <FormUpdate product={product} onSubmit={onSubmit} isLoading={isLoading} />}
     </Modal>
   )

@@ -13,12 +13,12 @@ export default function ModalDeleteConfirm({ id, ...modalProps }: TProps) {
   return (
     <Modal {...modalProps}>
       <div>
-        <h3>Yakin Ingin Menghapus?</h3>
-        <div className="flex content-between">
-          <button disabled={isLoading} onClick={onDelete}>
-            ya
+        <h3 className="text-lg font-semibold mb-5">Yakin Ingin Menghapus?</h3>
+        <div className="flex content-between gap-2.5">
+          <button className="button w-full text-white bg-red-700 border-red-800" disabled={isLoading} onClick={onDelete}>
+            Hapus
           </button>
-          <button onClick={modalProps.onClose}>
+          <button className="button w-full text-gray-700 border-gray-700" onClick={modalProps.onClose}>
             tidak
           </button>
         </div>

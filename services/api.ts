@@ -111,7 +111,7 @@ export const api = createApi({
           const lists = api.util
             .selectInvalidatedBy(getState() as RootState, [{ type: 'Product', id: 'LIST' }])
             .filter(({ endpointName }) => endpointName === 'products')
-          const tempId = Math.max(Math.round(Math.random() * 500), 300)
+          const tempId = Math.round(Math.random()) + 300
           const patches = lists.map(({ originalArgs }) =>
             dispatch(api.util.updateQueryData('products', originalArgs, (draft) => {
               draft.products.unshift({ ...body, id: tempId } as TProduct)
