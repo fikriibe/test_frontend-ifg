@@ -20,7 +20,6 @@ const filterSlice = createSlice({
   initialState,
   reducers: {
     setFilter: (state, action: PayloadAction<Partial<TFilterState>>) => {
-      console.log(action)
       return {
         ...state,
         ...action.payload

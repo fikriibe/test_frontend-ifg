@@ -1,15 +1,11 @@
 import * as Yup from 'yup'
 
-export const addSchema = Yup.object().shape({
-  title: Yup.string().required(),
+export const updateSchema = Yup.object().shape({
+  id: Yup.number().required(),
+  title: Yup.string().required().min(3).max(100),
   category: Yup.string().required(),
-  price: Yup.number().required(),
-  stock: Yup.number().required()
+  price: Yup.number().required().min(1),
+  stock: Yup.number().required().min(0),
 })
 
-export const updateSchema = Yup.object().shape({
-  id: Yup.number().required()
-}).concat(addSchema)
-
-export type TAddSchema = Yup.InferType<typeof addSchema>
 export type TUpdateSchema = Yup.InferType<typeof updateSchema>

@@ -1,4 +1,4 @@
-import { setFilter, TFilterState } from "@/lib/filterReducer"
+import { setFilter, TFilterState } from "@/lib/reducer/filter"
 import { useAppSelector } from "@/lib/hook"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useRef } from "react"

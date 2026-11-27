@@ -2,7 +2,7 @@ import { useAppSelector } from "@/lib/hook"
 import TableHeaderSort from "./TableHeaderSort"
 import { useDispatch } from "react-redux"
 import { useProductsQuery } from "@/services/api"
-import { setFilter } from "@/lib/filterReducer"
+import { setFilter } from "@/lib/reducer/filter"
 type TProps = {
   setEditId: (id: number) => void
   setDeleteId: (id: number) => void

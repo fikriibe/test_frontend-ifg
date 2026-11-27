@@ -1,4 +1,4 @@
-import { setFilter } from "@/lib/filterReducer"
+import { setFilter } from "@/lib/reducer/filter"
 import { useAppSelector } from "@/lib/hook"
 import { useMemo } from "react"
 import { useDispatch } from "react-redux"
