@@ -1,4 +1,3 @@
-import { RootState } from "@/lib/store";
 import { TCategory, TProduct, TSortKeyOption } from "@/types/api";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -109,7 +108,7 @@ export const api = createApi({
         query: (body) => ({ url: '/add', method: 'POST', body }),
         async onQueryStarted(body, { dispatch, getState, queryFulfilled }) {
           const lists = api.util
-            .selectInvalidatedBy(getState() as RootState, [{ type: 'Product', id: 'LIST' }])
+            .selectInvalidatedBy(getState() as never, [{ type: 'Product', id: 'LIST' }])
             .filter(({ endpointName }) => endpointName === 'products')
           const tempId = Math.round(Math.random()) + 300
           const patches = lists.map(({ originalArgs }) =>
@@ -130,7 +129,7 @@ export const api = createApi({
       productUpdate: build.mutation<TProduct, { id: number } & Partial<TProduct>>({
         query: ({ id, ...body }) => ({ url: `/${id}`, method: 'PUT', body }),
         async onQueryStarted({ id, ...body }, { dispatch, getState, queryFulfilled }) {
-            const cached = api.util.selectInvalidatedBy(getState() as RootState, [{ type: 'Product', id }])
+            const cached = api.util.selectInvalidatedBy(getState() as never, [{ type: 'Product', id }])
             const patches = cached.map(({ endpointName, originalArgs }) =>
               endpointName === 'products'
                 ? dispatch(api.util.updateQueryData('products', originalArgs, (draft) => {
@@ -154,7 +153,7 @@ export const api = createApi({
         query: (id) => ({ url: `/${id}`, method: 'DELETE' }),
         async onQueryStarted(id, { dispatch, getState, queryFulfilled }) {
           const lists = api.util
-            .selectInvalidatedBy(getState() as RootState, [{ type: 'Product', id: 'LIST' }])
+            .selectInvalidatedBy(getState() as never, [{ type: 'Product', id: 'LIST' }])
             .filter(({ endpointName }) => endpointName === 'products')
           const patches = lists.map(({ originalArgs }) =>
             dispatch(api.util.updateQueryData('products', originalArgs, (draft) => {

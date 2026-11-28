@@ -34,7 +34,7 @@ body {
   padding: 16px;
 }
 
-input {
+input, textarea {
     border-width: 1px;
     @apply  border-gray-700 rounded-sm p-1
 }
