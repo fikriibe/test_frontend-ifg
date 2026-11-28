@@ -1,6 +1,5 @@
 import { TStep1Schema, TStep2Schema, TStep3Schema } from "@/schema/formCreate";
-import { PayloadAction } from "@reduxjs/toolkit";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type TFormCreateState = {
   currentStep: number

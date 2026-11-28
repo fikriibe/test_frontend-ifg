@@ -1,14 +1,14 @@
 'use client'
 
+import Modal from "@/components/Modal"
 import { useAppSelector } from "@/lib/hook"
+import { resetStep } from "@/lib/reducer/formCreate"
+import { useState } from "react"
+import { useDispatch } from "react-redux"
 import Step1Form from "./Step1Form"
 import Step2Form from "./Step2Form"
 import Step3Form from "./Step3Form"
 import StepReview from "./StepReview"
-import { useEffect, useState } from "react"
-import Modal from "@/components/Modal"
-import { useDispatch } from "react-redux"
-import { resetStep } from "@/lib/reducer/formCreate"
 
 const stepperInfo = [
   "Step 1",
