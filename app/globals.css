@@ -67,3 +67,12 @@ button.button {
     text-transform: uppercase;
     border: 1px solid;
 }
+
+.form-create-stepper:before {
+    content: "";
+    position: absolute;
+    height: 2px;
+    width: 90%;
+    top: 20px;
+    background-color: #171717;
+}

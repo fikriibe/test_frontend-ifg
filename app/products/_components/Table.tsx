@@ -3,6 +3,8 @@ import TableHeaderSort from "./TableHeaderSort"
 import { useDispatch } from "react-redux"
 import { useProductsQuery } from "@/services/api"
 import { setFilter } from "@/lib/reducer/filter"
+import PencilIcon from "@/components/icon/PencilIcon"
+import TrashIcon from "@/components/icon/TrashIcon"
 type TProps = {
   setEditId: (id: number) => void
   setDeleteId: (id: number) => void
@@ -62,19 +64,10 @@ export default function Table({ setEditId,setDeleteId }: TProps) {
           <td>{item.stock}</td>
           <td className="space-x-2">
             <button onClick={() => setEditId(item.id)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
-                <path d="m15 5 4 4"/>
-              </svg>
+              <PencilIcon />
             </button>
-            <button onClick={() => setDeleteId(item.id)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 6h18"/>
-                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                <path d="M10 11v6"/>
-                <path d="M14 11v6"/>
-              </svg>
+            <button onClick={() => setDeleteId(item.id)} className="text-red-700">
+              <TrashIcon />
             </button>
           </td>
        	</tr>

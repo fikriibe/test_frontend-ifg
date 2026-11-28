@@ -9,16 +9,18 @@ export const step1Schema = Yup.object().shape({
   description: Yup.string().min(20),
 })
 
+const variant = Yup.object().shape({
+  color: Yup.string().required(),
+  size: Yup.string().required(),
+  sku: Yup.string().matches(/^SKU-[A-Z]{3}-[0-9]{4}$/),
+  extraPrice: Yup.number().min(0)
+})
+
 export const step2Schema = Yup.object().shape({
   price: rulesMin1,
   stock: Yup.number().required().min(0),
   discountPercentage: Yup.number().optional().min(0).max(99),
-  variants: Yup.array().of(Yup.object().shape({
-    color: Yup.string().required(),
-    size: Yup.string().required(),
-    sku: Yup.string().matches(/^SKU-[A-Z]{3}-[0-9]{4}$/),
-    extraPrice: Yup.number().min(0)
-  }))
+  variants: Yup.array().of(variant)
 })
 
 export const step3Schema = Yup.object().shape({
@@ -31,7 +33,7 @@ export const step3Schema = Yup.object().shape({
   fragile: Yup.boolean(),
   shippingInformation: Yup.string().when('fragile', {
     is: true,
-    then: schema => schema.required(),
+    then: schema => schema.min(10).required(),
     otherwise: schema => schema.notRequired()
   }),
 })
@@ -39,3 +41,4 @@ export const step3Schema = Yup.object().shape({
 export type TStep1Schema = Yup.InferType<typeof step1Schema>
 export type TStep2Schema = Yup.InferType<typeof step2Schema>
 export type TStep3Schema = Yup.InferType<typeof step3Schema>
+export type TVariantSchema = Yup.InferType<typeof variant>

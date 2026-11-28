@@ -18,24 +18,27 @@ export default function FormStepper() {
 
   return (
     <>
-      <div className="flex items-center gap-5">
-        {stepperInfo.map((title, index) => {
-          const step = index + 1
-          const isCurrent = currentStep === step
-          return (
-            <div className={isCurrent ? "text-gray-900" : "text-gray-500" } key={step}>
-              <span className={ `grid content-center text-center border w-10 h-10 rounded-full ${isCurrent ? 'border-gray-700' : "border-gray-400"}`}>{step}</span>
-              {title}
-            </div>
-          )
-        })}
-
+      <div className="grid place-items-center mb-5">
+        <div className="form-create-stepper relative flex items-center justify-center gap-5">
+          {stepperInfo.map((title, index) => {
+            const step = index + 1
+            const isCurrent = currentStep === step
+            return (
+              <div className={`z-10 place-items-center ${isCurrent ? "text-gray-900 font-semibold" : "text-gray-500"}`} key={step}>
+                <span className={ `grid content-center text-center w-10 h-10 bg-white rounded-full ${isCurrent ? 'border-gray-700 border-2' : "border-gray-400 border"}`}>{step}</span>
+                {title}
+              </div>
+            )
+          })}
+        </div>
       </div>
-      <div>
-        {currentStep === 1 && <Step1Form />}
-        {currentStep === 2 && <Step2Form />}
-        {currentStep === 3 && <Step3Form />}
-        {currentStep === 4 && <StepReview />}
+      <div className="grid place-items-center">
+        <div className="w-full max-w-lg">
+          {currentStep === 1 && <Step1Form />}
+          {currentStep === 2 && <Step2Form />}
+          {currentStep === 3 && <Step3Form />}
+          {currentStep === 4 && <StepReview />}
+        </div>
       </div>
     </>
   )

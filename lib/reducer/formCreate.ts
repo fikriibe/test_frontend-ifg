@@ -37,5 +37,5 @@ const formCreateSlice = createSlice({
   }
 })
 
-export const { submitStep1, submitStep2, submitStep3 } = formCreateSlice.actions
+export const { submitStep1, submitStep2, submitStep3, setCurrentStep } = formCreateSlice.actions
 export default formCreateSlice.reducer
