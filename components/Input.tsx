@@ -2,7 +2,7 @@ import { ComponentProps } from "react"
 import { FieldValues, Path, UseFormRegister } from "react-hook-form"
 
 type TProps<T extends FieldValues> = {
-  as?: 'input' | 'textarea'
+  as?: 'input' | 'textarea' | 'checkbox'
   name: Path<T>
   label: string
   register: UseFormRegister<T>
@@ -12,6 +12,7 @@ type TProps<T extends FieldValues> = {
 export default function Input<T extends FieldValues>({ as = 'input', name, label, register, errorMessage, ...other }: TProps<T> ) {
   return (
     <div>
+      {as === 'checkbox' && <input {...other as ComponentProps<'input'>} {...register(name)} className="mr-2" /> }
       <label htmlFor={name}>
         {label}
       </label>

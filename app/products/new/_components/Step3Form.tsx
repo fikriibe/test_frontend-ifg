@@ -62,6 +62,7 @@ export default function Step3Form() {
         name="fragile"
         label="is Fragile"
         type="checkbox"
+        as="checkbox"
       />
       <Input
         register={register}

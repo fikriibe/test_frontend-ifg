@@ -33,9 +33,12 @@ const formCreateSlice = createSlice({
     },
     setCurrentStep: (state, action: PayloadAction<number>) => {
       return {...state, currentStep: action.payload}
+    },
+    resetStep: () => {
+      return initialState
     }
   }
 })
 
-export const { submitStep1, submitStep2, submitStep3, setCurrentStep } = formCreateSlice.actions
+export const { submitStep1, submitStep2, submitStep3, setCurrentStep, resetStep } = formCreateSlice.actions
 export default formCreateSlice.reducer

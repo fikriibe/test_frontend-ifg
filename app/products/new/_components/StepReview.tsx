@@ -1,6 +1,9 @@
 import PencilIcon from "@/components/icon/PencilIcon"
 import { useAppSelector } from "@/lib/hook"
-import { setCurrentStep } from "@/lib/reducer/formCreate"
+import { resetStep, setCurrentStep } from "@/lib/reducer/formCreate"
+import { useProductAddMutation } from "@/services/api"
+import { TProduct } from "@/types/api"
+import { useRouter } from "next/navigation"
 import { Fragment } from "react"
 import { useDispatch } from "react-redux"
 
@@ -29,7 +32,36 @@ function TableStepReview({ children, title, step }: React.PropsWithChildren<{ ti
 }
 
 export default function StepReview() {
+  const [addProduct] = useProductAddMutation()
+  const dispatch = useDispatch()
+  const router = useRouter()
   const { step1, step2, step3 } = useAppSelector(s => s.formCreate)
+
+  const submit = () => {
+    const product = {
+      title: step1.title ?? '',
+      brand: step1.brand ?? '',
+      category: step1.category ?? '',
+      description: step1.description ?? '',
+      price: step2.price ?? 1,
+      stock: step2.stock ?? 0,
+      discountPercentage: step2.discountPercentage ?? 0,
+      // SKU
+      weight: step3.weight ?? 0,
+      dimensions: {
+        width: step3.dimensions?.width ?? 1,
+        height: step3.dimensions?.height ?? 1,
+        depth: step3.dimensions?.depth ?? 1,
+      },
+     shippingInformation: step3.shippingInformation ?? ''
+    } as Omit<TProduct, 'id'>
+    addProduct(product).then(() => {
+      dispatch(resetStep())
+      router.back()
+    })
+
+  }
+
   return (
     <div className="space-y-3">
       <h3 className="text-lg font-semibold">Review</h3>
@@ -116,7 +148,7 @@ export default function StepReview() {
         </tr>
       </TableStepReview>
 
-      <button>Submit</button>
+      <button onClick={submit} className="button bg-blue-700 border-blue-800 text-white w-full">Submit</button>
     </div>
   )
 }

@@ -85,14 +85,14 @@ export default function Step2Form() {
                 type='number'
                 errorMessage={getErrorMessageVariants(i, 'extraPrice')}
               />
-              <button className="button" onClick={() => remove(i)}>
+              <button className="button bg-red-700 border-red-800 text-white" onClick={() => remove(i)}>
                 remove
               </button>
             </div>
           )
         })}
         <button
-          className="button"
+          className="button mt-4 bg-green-700 border-green-800 text-white"
           onClick={() => append({
             color: '',
             size: '',

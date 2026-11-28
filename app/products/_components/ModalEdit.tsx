@@ -3,8 +3,8 @@ import { useProductQuery, useProductUpdateMutation } from "@/services/api";
 import { TProduct } from "@/types/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { TUpdateSchema, updateSchema } from "../_schemas/schema";
 import FormProduct from "./FormProduct";
+import { TUpdateSchema, updateSchema } from "@/schema/product";
 
 type TFormUpdate = {
   product: TProduct

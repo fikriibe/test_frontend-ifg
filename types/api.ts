@@ -10,7 +10,7 @@ export type TProduct = {
       tags: string[]
       brand: string
       sku: string
-      weight: 2
+      weight: number
       dimensions: {
         width: number
         height: number
